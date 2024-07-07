@@ -6,6 +6,9 @@ ARG RUNNER_IMG="debian:$DEB_VSN"
 
 FROM ${BUILDER_IMG} AS builder
 
+# workaround for QEMU-erlang bug
+ENV ERL_FLAGS="+JPperf true"
+
 # Install git (Needed for heroicons dep)
 RUN apt-get update && apt-get install -y git inotify-tools
 
