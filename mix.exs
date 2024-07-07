@@ -80,7 +80,19 @@ defmodule Kanban.MixProject do
         "tailwind kanban --minify",
         "esbuild kanban --minify",
         "phx.digest"
+      ],
+      check: [
+        "clean",
+        "compile --warnings-as-errors",
+        "test --max-failures 1 --trace --warnings-as-errors",
+        "format --check-formatted",
+        "dialyzer --format github",
+        "deps.unlock --check-unused"
       ]
     ]
+  end
+
+  def cli do
+    [preferred_envs: [check: :test]]
   end
 end
