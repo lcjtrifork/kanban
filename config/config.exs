@@ -8,6 +8,7 @@
 import Config
 
 config :kanban,
+  ecto_repos: [Kanban.Repo],
   generators: [timestamp_type: :utc_datetime]
 
 # Configures the endpoint
@@ -19,7 +20,7 @@ config :kanban, KanbanWeb.Endpoint,
     layout: false
   ],
   pubsub_server: Kanban.PubSub,
-  live_view: [signing_salt: "QzVqiVod"]
+  live_view: [signing_salt: "N8cnYqDl"]
 
 # Configures the mailer
 #
