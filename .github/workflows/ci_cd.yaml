@@ -28,7 +28,7 @@ jobs:
         uses: actions/cache@v4
         env:
           ELIXIR_VERSION: ${{ steps.setup-beam.outputs.elixir-version }}
-          ERLANG_VERSION: ${{ steps.setup-beam.outputs.erlang-version }}
+          ERLANG_VERSION: ${{ steps.setup-beam.outputs.otp-version }}
         id: cache-deps
         with:
           path: |
