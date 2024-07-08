@@ -10,6 +10,7 @@ defmodule Kanban.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
+      test_coverage: [tool: ExCoveralls],
       dialyzer: [
         plt_core_path: "priv/plts/core.plt",
         plt_file: {:no_warn, "priv/plts/project.plt"},
@@ -61,7 +62,8 @@ defmodule Kanban.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
-      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:excoveralls, "~> 0.18", only: :test}
     ]
   end
 
@@ -81,10 +83,10 @@ defmodule Kanban.MixProject do
         "esbuild kanban --minify",
         "phx.digest"
       ],
-      check: [
+      ci: [
         "clean",
         "compile --warnings-as-errors",
-        "test --max-failures 1 --trace --warnings-as-errors",
+        "test --max-failures 1 --cover --trace --warnings-as-errors",
         "format --check-formatted",
         "dialyzer --format github",
         "deps.unlock --check-unused"
@@ -93,6 +95,14 @@ defmodule Kanban.MixProject do
   end
 
   def cli do
-    [preferred_envs: [check: :test]]
+    [
+      preferred_envs: [
+        ci: :test,
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
+    ]
   end
 end
