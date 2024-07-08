@@ -10,7 +10,7 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
-    name: Compile with mix test, format & dialyzer
+    name: Run CI checks
     env:
       MIX_ENV: test
     steps:
