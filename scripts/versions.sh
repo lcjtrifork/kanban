@@ -12,6 +12,7 @@ ELIXIR_VERSION=$(echo "$version_output" | grep 'elixir' | cut -d ' ' -f2 | cut -
 ERLANG_VERSION=$(echo "$version_output" | grep 'erlang' | cut -d ' ' -f2)
 
 # add the variables to the `GITHUB_ENV` (env used by the action's runner)
+# (the curly braces group the output)
 {
   echo "ELIXIR_VERSION=${ELIXIR_VERSION}";
   echo "ERLANG_VERSION=${ERLANG_VERSION}";

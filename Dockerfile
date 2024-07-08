@@ -10,7 +10,10 @@ FROM ${BUILDER_IMG} AS builder
 ENV ERL_FLAGS="+JPperf true"
 
 # Install git (Needed for heroicons dep)
-RUN apt-get update && apt-get install -y git inotify-tools
+# Install inotify-tools (Needed for file watching in dev mode)
+RUN apt-get update -y \ 
+    && apt-get install -y git inotify-tools \ 
+    && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # prepare build dir
 WORKDIR /app
