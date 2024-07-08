@@ -24,7 +24,7 @@ jobs:
           version-file: .tool-versions
           version-type: strict
 
-      - name: Cache deps directory
+      - name: Get cached deps and _build dirs
         uses: actions/cache@v4
         env:
           ELIXIR_VERSION: ${{ steps.setup-beam.outputs.elixir-version }}
@@ -42,16 +42,7 @@ jobs:
         if: steps.cache-deps.outputs.cache-hit != 'true'
         run: mix deps.get
 
-      - name: Compile code
-        run: mix compile --warnings-as-errors
-
-      - name: Run tests
-        run: mix test --max-failures 1 --trace --warnings-as-errors
-
-      - name: Check code is formatted
-        run: mix format --check-formatted
-
-      - name: Cache plt files
+      - name: Get cached plt files
         uses: actions/cache@v4
         env:
           KEY_BASE: plt-${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}
@@ -63,11 +54,8 @@ jobs:
           restore-keys: |
             ${{ env.KEY_BASE }}-
       
-      - name: Dialyzer static analysis
-        run: mix dialyzer --format github
-
-      - name: Check unused dependencies
-        run: mix deps.unlock --check-unused
+      - name: Run CI checks
+        run: mix ci
   
   build-push:
     runs-on: ubuntu-latest
