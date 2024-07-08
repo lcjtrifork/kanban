@@ -26,14 +26,17 @@ jobs:
 
       - name: Cache deps directory
         uses: actions/cache@v4
+        env:
+          ELIXIR_VERSION: ${{ steps.setup-beam.outputs.elixir-version }}
+          ERLANG_VERSION: ${{ steps.setup-beam.outputs.erlang-version }}
         id: cache-deps
         with:
           path: |
             deps
             _build
-          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          key: mix-${{ runner.os }}-${{ env.ELIXIR_VERSION }}-${{ env.ERLANG_VERSION }}-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
-            ${{ runner.os }}-mix-
+            mix-${{ runner.os }}-${{ env.ELIXIR_VERSION }}-${{ env.ERLANG_VERSION }}-
 
       - name: Get dependencies
         if: steps.cache-deps.outputs.cache-hit != 'true'
