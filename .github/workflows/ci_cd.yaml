@@ -68,6 +68,9 @@ jobs:
       
       - name: Run CI checks
         run: mix ci
+
+      - name: Check packer files
+        run: cd packer && packer validate . && packer fmt -check .
   
   build-push:
     runs-on: ubuntu-latest
