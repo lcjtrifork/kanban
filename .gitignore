@@ -76,3 +76,6 @@ crash.log
 *.box
 
 *private_key.pem
+
+secrets/.*
+**/key.txt
