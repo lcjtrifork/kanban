@@ -73,6 +73,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: ci
     name: Build Docker image & push to ghcr.io
+    outputs: 
+      unique_docker_tag: ${{ steps.get-unique-docker-tag.outpus.sha_tag }}
     steps:
       - name: Checkout git repo
         uses: actions/checkout@v4
@@ -94,6 +96,16 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
             type=ref,event=pr
             type=sha,format=short
+
+      - name: Gets unique image tag
+        id: get-unique-docker-tag
+        if: github.ref == 'refs/heads/main'
+        run: |-
+          IMAGE_TAG=$(echo "${{ steps.meta.outputs.tags }}" \
+                      | grep 'sha' \
+                      | tr '\n' ' ' \
+                      | awk '{print $1}')
+          echo "sha_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: Parse versions from .tool-versions
         id: parse-asdf
@@ -119,3 +131,20 @@ jobs:
             EX_VSN=${{ env.ELIXIR_VERSION }}
             OTP_VSN=${{ env.ERLANG_VERSION }}
 
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: build-push
+    name: Deploy application
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/deploy
+        with:
+          github_user: ${{ github.repository_owner }}
+          gh_pat: ${{ secrets.GH_PAT }}
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          age_key: ${{ secrets.AGE_KEY }}
+          ssh_private_key: ${{ secrets.PRIVATE_KEY }}
+          image_tag: ${{ needs.build-push.outputs.unique_docker_tag }}
