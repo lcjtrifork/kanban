@@ -17,13 +17,10 @@ module "repository_secrets" {
 }
 
 module "contributing_workflow" {
-  source       = "../../modules/integrations/github/contributing_workflow"
-  repository   = "kanban"
-  github_owner = "lcjtrifork"
-  status_checks = [
-    "Compile with mix test, format, dialyzer & unused deps check"
-  ]
-  # status_checks = ["Run CI checks"]
+  source        = "../../modules/integrations/github/contributing_workflow"
+  repository    = "kanban"
+  github_owner  = "lcjtrifork"
+  status_checks = ["Run CI checks"]
 }
 
 output "swarm_ssh_command" {
