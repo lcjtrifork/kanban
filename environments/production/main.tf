@@ -16,6 +16,13 @@ module "repository_secrets" {
   github_owner = "lcjtrifork"
 }
 
+module "contributing_workflow" {
+  source        = "../../modules/integrations/github/contributing_workflow"
+  repository    = "kanban"
+  github_owner  = "lcjtrifork"
+  status_checks = ["Run CI checks"]
+}
+
 output "swarm_ssh_command" {
   value = module.swarm.ssh_command
 }
